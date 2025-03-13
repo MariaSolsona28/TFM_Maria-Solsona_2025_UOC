@@ -10,8 +10,7 @@ Email: msolsonag@uoc.edu
 **Run using command line tools (bash):**
 
 1. Data processing
-2. Fastqc
-3. MultiQC
+2. Quality control of pre-aligned reads (FastQC and MultiQC)
    
 
 

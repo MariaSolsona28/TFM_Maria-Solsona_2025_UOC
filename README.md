@@ -13,6 +13,7 @@ Email: msolsonag@uoc.edu
 2. Quality control of pre-aligned reads (FastQC and MultiQC)
 3. Adapter Trimming (Fastp)
 4. Quality control of trimmed and pre-aligned reads (FastQC and MultiQC post trimming)
+5. Alignment with reference genome (HISAT2)
    
 
 

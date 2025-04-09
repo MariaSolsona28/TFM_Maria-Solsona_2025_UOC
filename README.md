@@ -16,7 +16,14 @@ Email: msolsonag@uoc.edu
 5. Alignment with reference genome (HISAT2, SAMtools)
    - Reference genome (SRR27943849.fasta and indexed SRR27943849.fasta.fai)
    - Trimmed reads
-   
+6. FeatureCounts
+   - Counts list 
 
 
 **Run in R:**
+
+
+
+**Code**
+
+

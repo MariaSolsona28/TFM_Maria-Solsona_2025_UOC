@@ -31,22 +31,21 @@ Email: msolsonag@uoc.edu
 **1. Data processing**
 
 **2. Quality control of pre-aligned reads**
-With FastQC and MultiQC
+- With FastQC and MultiQC
 
 **3. Adapter Trimming**
-With Fastp
+- With Fastp
 
 **4. Quality control of trimmed and pre-aligned reads**
-With FastQC and MultiQC post trimming
+- With FastQC and MultiQC post trimming
 
 **5. Alignment with reference genome**
-With HISAT2, SAMtools
-   - Reference genome (SRR27943849.fasta and indexed SRR27943849.fasta.fai)
-   - Trimmed reads
+- With HISAT2, SAMtools
+  
 
 **6. FeatureCounts**
 
-With FeatureCounts 
+- With FeatureCounts 
 
 module load subread
 

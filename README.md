@@ -5,7 +5,7 @@ A step-by-step pipeline for analyzing RNA-sequencing data for my Final Master's 
 Email: msolsonag@uoc.edu
 
 
-**Table of contents**
+**A) Table of contents**
 
 **Run using command line tools (bash):**
 
@@ -26,7 +26,7 @@ Email: msolsonag@uoc.edu
 
 
 
-**Code**
+**B) Code**
 
 **1. Data processing**
 

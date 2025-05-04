@@ -25,7 +25,7 @@ Email: msolsonag@uoc.edu
 
 7. Counts list (Merge the 3 conditions, import in R)
 8. Import Metadata
-9. DESeq2
+9. DESeq2 analysis
 
 
 

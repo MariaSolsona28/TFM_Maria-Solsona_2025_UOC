@@ -7,7 +7,7 @@ Email: msolsonag@uoc.edu
 
 **A) Table of contents**
 
-**Run using command line tools (bash):**
+**Part I: Run using command line tools (bash):**
 
 1. Data processing
 2. Quality control of pre-aligned reads (FastQC and MultiQC)
@@ -21,7 +21,7 @@ Email: msolsonag@uoc.edu
    - Counts list for the 3 conditions (Control, CHX, OCT)
 
 
-**Run in R:**
+**Part II: Run in RStudio:**
 
 7. Counts list (Merge the 3 conditions, import in R)
 8. Import Metadata

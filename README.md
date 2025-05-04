@@ -18,12 +18,14 @@ Email: msolsonag@uoc.edu
    - Trimmed reads
 6. FeatureCounts
    - Reference genome (SRR27943849.fasta) and GTF file from reference (SA_678_BaktaCLEAN.gtf)
-   - Counts list 
+   - Counts list for the 3 conditions (Control, CHX, OCT)
 
 
 **Run in R:**
 
-7. DESeq2
+7. Counts list (Merge the 3 conditions, import in R)
+8. Import Metadata
+9. DESeq2
 
 
 

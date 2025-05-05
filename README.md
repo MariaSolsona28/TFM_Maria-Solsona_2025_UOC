@@ -5,7 +5,7 @@ A step-by-step pipeline for analyzing RNA-sequencing data for my Final Master's 
 Email: msolsonag@uoc.edu
 
 
-**A) Table of contents**
+**Table of contents**
 
 **Part I: Run using command line tools (bash):**
 
@@ -25,7 +25,10 @@ Email: msolsonag@uoc.edu
 
 7. Counts list (Merge the 3 conditions, import in R)
 8. Import Metadata
-9. DESeq2 analysis
+9. Quality control before normalization
+10. DESeq2 analysis (Normalization and identification of DEGs)
+11. Understanding of DEGs (PCA plot, Volcano plot, Heatmap)
+12. Venn diagram and Pathway analysis (UniProt)
 
 
 

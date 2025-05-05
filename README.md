@@ -13,7 +13,7 @@ Email: msolsonag@uoc.edu
 2. Quality control of pre-aligned reads (FastQC and MultiQC)
 3. Adapter Trimming (Fastp)
 4. Quality control of trimmed and pre-aligned reads (FastQC and MultiQC post trimming)
-5. Alignment with reference genome (HISAT2, SAMtools)
+5. Alignment and mapping reads to reference genome (HISAT2, SAMtools)
    - Reference genome (SRR27943849.fasta and indexed SRR27943849.fasta.fai)
    - Trimmed reads
 6. FeatureCounts
@@ -39,14 +39,14 @@ Email: msolsonag@uoc.edu
 
 Make your directory using `mkdir`, and upload all the RNA-Sequencing raw reads (pair-end reads in fastq.gz format) and the reference genome (in fasta format and GTF) 
 
-- Pair-end RNA-Seq reads from the different conditions
-Control (MM13, MM14, MM15)
-CHX (MM16, MM17, MM18)
-OCT (MM19, MM20, MM21)
+1.1) Pair-end RNA-Seq reads from the different conditions
+- Control (MM13, MM14, MM15)
+- CHX (MM16, MM17, MM18)
+- OCT (MM19, MM20, MM21)
 
-- Reference genome
-FASTA: SRR27943849.Fasta.gz
-GTF file annotated from reference: SA_678BaktaCLEAN.gtf 
+1.2) Reference genome
+- FASTA: SRR27943849.Fasta.gz
+- GTF file annotated from reference: SA_678BaktaCLEAN.gtf 
 
 
 ```bash
@@ -128,7 +128,45 @@ for i in {13..21}; do fastqc -o fastqc_trim_output_folder MM${i}_output_R1.fastq
 Use the same commands `fastqc` and `multiqc` as explained before (Section 2.)
 
 
-## 5. FeatureCounts
+## 5. Alignment and mapping reads to reference genome
+
+Use`hisat2`, to aligned the previously trimmed reads with the refrence genome (SRR27943849.fasta)
+
+```bash
+module load hisat2
+module load samtools
+module load flagstat
+
+- Build an index for the reference genome
+hisat2-build SRR27943849.fasta genome_index
+
+- Aligned trimmed reads to the reference genome (indexed SRR27943849.fasta.fai)
+hisat2 -x genome_index -1 
+/Maria_Solsona_data/Staph_RNA_seq/trim_output/MM13_outpu
+ t_R1.fastq.gz -2 
+/Maria_Solsona_data/Staph_RNA_seq/trim_output/MM13_outpu
+ t_R2.fastq.gz -S aligned_reads.sam
+
+- Check SAM output
+head aligned_reads.sam
+
+- Convert SAM to BAM format with SAMtools
+samtools view -bS aligned_reads.sam > aligned_reads.bam
+
+- Sort and Index BAM file
+samtools sort aligned_reads.bam -o sorted_aligned_reads.bam
+samtools index sorted_aligned_reads.bam
+
+- Check BAM output
+samtools quickeck sorted_Aligned_reads.bam
+view -H sorted_aligned_reads.bam
+
+- Summary of the alignment with flagstat
+samtools flagstat sorted_aligned_reads.bam
+```
+
+
+## 6.FeatureCounts
 
 Use`featureCounts`, running the following commands:
 

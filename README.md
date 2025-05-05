@@ -33,5 +33,13 @@ Email: msolsonag@uoc.edu
 
 
 
+    <module load subread>
+      <Control samples>
+- featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM13.txt -p -t gene sorted_aligned_reads_MM13.bam
+- featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM14.txt -p -t gene sorted_aligned_reads_MM14.bam
+- featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM15.txt -p -t gene sorted_aligned_reads_MM15.bam
+
+     
+
 
 

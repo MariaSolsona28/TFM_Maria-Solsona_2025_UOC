@@ -1,0 +1,20 @@
+﻿Geneid,Gene_name,Product,Expression,Pathway
+nbis-gene-1437,adh,Alcohol dehydrogenase,Upregulated, Alcohol metabolism
+nbis-gene-1802,NA,hypothetical protein,Upregulated,Unknown
+nbis-gene-1813,pflA,Pyruvate formate-lyase-activating enzyme,Upregulated, Fermentation
+ nbis-gene-1814,pflB,Formate acetyltransferase,Upregulated, Fermentation
+ nbis-gene-1927,NA,Oleate hydratase,Upregulated,Unknown
+ nbis-gene-2298,nasD,Nitrite reductase [NAD(P)H],Upregulated,Nitrogen metabolism
+ nbis-gene-2299,nasE,Assimilatory nitrite reductase [NAD(P)H] small subunit,Upregulated,Nitrogen metabolism
+nbis-gene-2300,nasF,Uroporphyrinogen-III C-methyltransferase,Upregulated,Nitrogen metabolism
+nbis-gene-2302,narH,Respiratory nitrate reductase 1 beta chain,Upregulated,Nitrogen metabolism
+nbis-gene-2303,NA,hypothetical protein,Upregulated,Unknown
+nbis-gene-2304,narX,Nitrate reductase-like protein ,Upregulated,Nitrogen metabolism
+nbis-gene-2306,nreB,Oxygen sensor histidine kinase,Upregulated, Transduction
+nbis-gene-2307,nreC,Oxygen regulatory protein,Upregulated, Transduction
+nbis-gene-2312,narT,putative nitrate transporter NarT,Upregulated,Nitrogen metabolism
+nbis-gene-989,scn_2,Staphylococcal complement inhbubitor,Downregulated,Complement system regulation
+nbis-gene-990,fib,Fibrinogen-binding protein,Downregulated,Coagulation
+nbis-gene-993,NA,hypothetical protein,Downregulated,Unknown
+nbis-gene-1253,nuc,Thermonuclease,Downregulated,DNA degradation
+nbis-gene-1819,NA,hypothetical protein,Downregulated,Unknown

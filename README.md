@@ -188,4 +188,6 @@ featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM19.txt -p -t gene sorted_
 featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM20.txt -p -t gene sorted_aligned_reads_MM20.bam
 featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM21.txt -p -t gene sorted_aligned_reads_MM21.bam
 
+```
+
 Output files are tab-delimited text files for each sorted_aligned reads_samples. A merged file (Output_All), which consolidates the information from all the samples, is created and imported to RStudio for further analysis (Part II) 

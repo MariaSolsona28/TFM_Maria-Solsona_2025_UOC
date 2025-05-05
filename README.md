@@ -5,7 +5,7 @@ A step-by-step pipeline for analyzing RNA-sequencing data for my Final Master's 
 Email: msolsonag@uoc.edu
 
 
-**Table of contents**
+# **Table of contents**
 
 **Part I: Run using command line tools (bash):**
 
@@ -21,6 +21,7 @@ Email: msolsonag@uoc.edu
    - Counts list for the 3 conditions (Control, CHX, OCT)
 
 
+
 **Part II: Run in RStudio:**
 
 7. Counts list (Merge the 3 conditions, import in R)
@@ -32,20 +33,28 @@ Email: msolsonag@uoc.edu
 
 
 
-**Code**
+# **Code**
 
-## FeatureCounts
+### FeatureCounts
 
 Use`featureCounts`, running the following commands:
 
 ```bash
 module load subread
 
-Control samples
+- Control samples
 featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM13.txt -p -t gene sorted_aligned_reads_MM13.bam
 featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM14.txt -p -t gene sorted_aligned_reads_MM14.bam
 featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM15.txt -p -t gene sorted_aligned_reads_MM15.bam
 
+- CHX samples
+featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM16.txt -p -t gene sorted_aligned_reads_MM16.bam
+featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM17.txt -p -t gene sorted_aligned_reads_MM17.bam
+featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM18.txt -p -t gene sorted_aligned_reads_MM18.bam
 
+- OCT samples
+featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM19.txt -p -t gene sorted_aligned_reads_MM19.bam
+featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM20.txt -p -t gene sorted_aligned_reads_MM20.bam
+featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM21.txt -p -t gene sorted_aligned_reads_MM21.bam
 
 

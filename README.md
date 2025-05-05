@@ -18,13 +18,13 @@ Email: msolsonag@uoc.edu
    - Trimmed reads
 6. FeatureCounts
    - Reference genome (SRR27943849.fasta) and GTF file from reference (SA_678_BaktaCLEAN.gtf)
-   - Counts list for the 3 conditions (Control, CHX, OCT)
+   - Counts list for each indiviudal sample
 
 
 
 **Part II: Run in RStudio:**
 
-7. Counts list (Merge the 3 conditions, import in R)
+7. Counts list (Merge all the samples in one file to import in RStudio)
 8. Import Metadata
 9. Quality control before normalization
 10. DESeq2 analysis (Normalization and identification of DEGs)
@@ -173,7 +173,6 @@ Use`featureCounts`, running the following commands:
 ```bash
 module load subread
 
-
 - Control samples
 featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM13.txt -p -t gene sorted_aligned_reads_MM13.bam
 featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM14.txt -p -t gene sorted_aligned_reads_MM14.bam
@@ -189,4 +188,4 @@ featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM19.txt -p -t gene sorted_
 featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM20.txt -p -t gene sorted_aligned_reads_MM20.bam
 featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM21.txt -p -t gene sorted_aligned_reads_MM21.bam
 
-
+Output files are tab-delimited text files for each sorted_aligned reads_samples. A merged file (Output_All), which consolidates the information from all the samples, is created and imported to RStudio for further analysis (Part II) 

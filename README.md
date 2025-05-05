@@ -35,12 +35,106 @@ Email: msolsonag@uoc.edu
 
 # **Code**
 
-### FeatureCounts
+## 1. Data processing
+
+Make your directory using `mkdir`, and upload all the RNA-Sequencing raw reads (pair-end reads in fastq.gz format) and the reference genome (in fasta format and GTF) 
+
+- Pair-end RNA-Seq reads from the different conditions
+Control (MM13, MM14, MM15)
+CHX (MM16, MM17, MM18)
+OCT (MM19, MM20, MM21)
+
+- Reference genome
+FASTA: SRR27943849.Fasta.gz
+GTF file annotated from reference: SA_678BaktaCLEAN.gtf 
+
+
+```bash
+mkdir Maria_Solsona_data/Staph RNA seq/output_folder
+```
+
+## 2. Quality control (FastQC and MultiQC)
+
+## FastQC
+Use`fastqc`, to assess sequence quality, running the following commands:
+
+```bash
+module load fastqc
+
+- Control samples
+fastqc MM13_R1_001.fastq.gz --extract -o /home/output_folder/gzip
+fastqc MM13_R2_001.fastq.gz --extract -o /home/output_folder/gzip
+
+fastqc MM14_R1_001.fastq.gz --extract -o /home/output_folder/gzip
+fastqc MM14_R2_001.fastq.gz --extract -o /home/output_folder/gzip
+
+fastqc MM15_R1_001.fastq.gz --extract -o /home/output_folder/gzip
+fastqc MM15_R2_001.fastq.gz --extract -o /home/output_folder/gzip
+
+
+- CHX samples
+fastqc MM16_R1_001.fastq.gz --extract -o /home/output_folder/gzip
+fastqc MM16_R2_001.fastq.gz --extract -o /home/output_folder/gzip
+
+fastqc MM17_R1_001.fastq.gz --extract -o /home/output_folder/gzip
+fastqc MM17_R2_001.fastq.gz --extract -o /home/output_folder/gzip
+
+fastqc MM18_R1_001.fastq.gz --extract -o /home/output_folder/gzip
+fastqc MM18_R2_001.fastq.gz --extract -o /home/output_folder/gzip
+
+
+- OCT samples
+fastqc MM19_R1_001.fastq.gz --extract -o /home/output_folder/gzip
+fastqc MM19_R2_001.fastq.gz --extract -o /home/output_folder/gzip
+
+fastqc MM20_R1_001.fastq.gz --extract -o /home/output_folder/gzip
+fastqc MM20_R2_001.fastq.gz --extract -o /home/output_folder/gzip
+
+fastqc MM21_R1_001.fastq.gz --extract -o /home/output_folder/gzip
+fastqc MM21_R2_001.fastq.gz --extract -o /home/output_folder/gzip
+```
+
+
+
+## MultiQC
+
+Use`multiqc` to consolidate all the outputs in a single HTML report, running the following commands:
+
+```bash
+module load multiqc
+
+multiqc .
+```
+
+## 3. Adapter trimming (Fastp)
+Use`fastp`, to perform adapter trimming from the Illumina pair-end reads:
+
+
+```bash
+module load fastp
+
+- For example, make a new folder (fastqc_trim_output_folder) and for sample MM13 (Read 1 and Read 2):
+
+fastp -i /Maria_Solsona_data/Staph_RNA_seq/MM13_R1_001.fastq.gz -I /Maria_Solsona_data/Staph_RNA_seq/MM13_R2_001.fastq.gz --out1 MM13_output_R1.fastq.gz --out2 MM13_output_R2.fastq.gz --trim_poly_g --trim_poly_x --cut_right --cut_window_size 4 --cut_mean_quality 20 --detect_adapter_for_pe -h report.html -j report.json
+
+- Repeat for all the samples:
+for i in {13..21}; do fastqc -o fastqc_trim_output_folder MM${i}_output_R1.fastq.gz MM${i}_output_R2.fastq.gz
+```
+
+
+
+## 4.  Quality control of trimmed and pre-aligned reads (FastQC and MultiQC post trimming)
+
+Use the same commands `fastqc` and `multiqc` as explained before (Section 2.)
+
+
+## 5. FeatureCounts
 
 Use`featureCounts`, running the following commands:
 
 ```bash
 module load subread
+
 
 - Control samples
 featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM13.txt -p -t gene sorted_aligned_reads_MM13.bam

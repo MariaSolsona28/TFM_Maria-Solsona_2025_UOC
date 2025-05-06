@@ -1,0 +1,427 @@
+---
+title: "TFM - Part II: Run in RStudio"
+output:
+  html_document: default
+  pdf_document: default
+author: Maria Solsona
+date: "05-07-2025"
+---
+
+
+## 7. Counts list (Merge the 3 conditions in a document, import in R)
+
+
+Use the sorted Feature Counts file (with ALL counts together: Feature_Counts_Sorted_R_file_summary.csv)
+
+```{r}
+Feature_Counts_All <- read.csv("C:/Users/maria/OneDrive/Desktop/Feature_Counts_Sorted_R_file_summary.csv", header = TRUE, sep = ",")
+head(Feature_Counts_All)
+```
+
+
+Feature_Counts_All dataframe convert it in a matrix format
+
+```{r}
+Feature_Counts_All_matrix <- as.matrix(Feature_Counts_All[, -1])   # Exclude the first column
+rownames(Feature_Counts_All_matrix) <- Feature_Counts_All$Geneid
+```
+
+
+Dimensions of the matrix
+
+```{r}
+dim(Feature_Counts_All_matrix)  # Should return (number of genes, number of samples)
+```
+
+
+
+## 8. Import metadata in R
+
+Metadata file with Treatment information
+```{r}
+library(readxl)
+Metadata <- read.csv("C:/Users/maria/OneDrive/Desktop/Metadata.csv", header = TRUE, sep = ",")
+head(Metadata)
+```
+
+
+Metadata as a dataframe
+```{r}
+Metadata_All <- as.data.frame(Metadata)
+str(Metadata_All)
+Metadata_All$Treatment <- as.factor(Metadata_All$Treatment)
+str(Metadata_All)
+Metadata_All$Treatment <- relevel(as.factor(Metadata_All$Treatment), ref = "Control")
+
+```
+
+
+# 9. Quality control/assessment before DESEq2
+
+Library size
+```{r}
+librarySizes <- colSums(Feature_Counts_All_matrix)
+
+colors <- c(MM13 = "salmon", MM14 = "salmon", MM15 = "salmon", 
+            MM16 = "green4", MM17 = "green4", MM18 = "green4",
+            MM19 = "blue", MM20 = "blue", MM21 = "blue")
+
+barplot(librarySizes, 
+        names=names(librarySizes), 
+        las=2, 
+        main="Barplot of library sizes", 
+        col = colors[names(librarySizes)])
+```
+
+
+Raw counts before normalization
+
+```{r}
+log_counts <- log10(Feature_Counts_All_matrix + 1)  # Adding 1 to avoid log(0)
+
+colors <- c(MM13 = "salmon", MM14 = "salmon", MM15 = "salmon", 
+            MM16 = "green4", MM17 = "green4", MM18 = "green4",
+            MM19 = "blue", MM20 = "blue", MM21 = "blue")
+
+sample_names <- colnames(log_counts)
+color_vector <- colors[sample_names]
+
+boxplot(log_counts, 
+        main = "Raw counts (before normalization)", 
+        xlab = "Samples", 
+        ylab = "Log10(Raw Counts)", 
+        las = 2,  
+        col = color_vector)
+
+```
+
+
+# 10. DESeq2 Analysis
+
+
+Install and load all the packages needed
+
+```{r}
+library(htmltools)
+library(DESeq2)
+library(ggplot2)
+library(dplyr)
+```
+
+
+Create the DESeq dataset object
+
+```{r}
+
+dds <- DESeqDataSetFromMatrix(countData = Feature_Counts_All_matrix, 
+                              colData = Metadata_All,
+                              design=~Treatment)
+```
+
+
+Normalization and differential gene expression analysis
+
+```{r}
+dds <- DESeq(dds)
+
+res <- results(dds, alpha = 0.05, lfcThreshold = 1) # results in a table
+head(results(dds, tidy=TRUE)) 
+
+summary(res) #summary of the results
+```
+
+Save normalized counts to a CSV file
+
+```{r}
+normalized_counts <- counts(dds, normalized = TRUE) #normalized results
+
+desktop_path <- "C:/Users/maria/OneDrive/Desktop/normalized_counts.csv"
+
+write.csv(normalized_counts, file = desktop_path, row.names = TRUE)
+```
+
+
+Visualize count distributions after Normalization
+
+```{r}
+vsd <- vst(dds,blind=TRUE)
+```
+
+
+Check distributions of samples using boxplots
+
+```{r}
+annotation <- as.data.frame(colData(dds)[, "Treatment", drop = FALSE])
+colors <- c(Control = "salmon", CHX = "green4", OCT = "blue")
+
+
+boxplot(assay(vsd), 
+        xlab="", 
+        ylab="Log2 counts per million",
+        las=2,
+        main="Normalised Distributions",
+        col = colors[annotation$Treatment])
+
+abline(h=median(assay(vsd)), col="red")
+
+
+```
+
+
+PCA plot
+
+```{r}
+vsdata <- vst(dds, blind=FALSE) #variance stabilizing transformation
+plotPCA(vsdata, intgroup="Treatment")
+```
+
+
+
+MA plot
+
+```{r}
+plotMA(res, ylim=c(-5,5))
+```
+
+
+Heatmap of sample-sample distances
+
+```{r}
+dists <- dist(t(assay(vsdata))) #Compute distance matrix on vst data
+mat_dist <- as.matrix(dists)
+```
+
+
+Add condition names
+
+```{r}
+anno <- as.data.frame(colData(dds)[, "Treatment", drop = FALSE])
+
+annotation_colors <- list(Treatment = c(Control = "salmon", CHX = "green4", OCT = "blue"))
+```
+
+
+
+Plot the sample-sample distances
+
+```{r}
+library(pheatmap)
+library(RColorBrewer)
+pheatmap(mat_dist,
+         annotation_col = anno,
+         annotation_colors = annotation_colors,
+         clustering_distance_rows = dists,
+         clustering_distance_cols = dists,
+         color = colorRampPalette(rev(brewer.pal(9, "Blues")))(100),
+         main = "Sample-to-sample distances")
+
+```
+
+
+Dispersion plot
+
+```{r}
+plotDispEsts(dds)
+```
+
+
+
+Volcano Plot
+
+```{r}
+par(mfrow=c(1,1))
+
+with(res, plot(log2FoldChange, -log10(pvalue), pch=20, main="Volcano Plot", xlim=c(-8, 8), ylim=c(0, 300)))
+
+
+
+# Add colored points: red for upregulated, blue for downregulated
+# Upregulated genes (log2FC > 1 and padj < 0.05)
+with(subset(res, padj < 0.05 & log2FoldChange > 1), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+
+# Downregulated genes (log2FC < -1 and padj < 0.05)
+with(subset(res, padj < 0.05 & log2FoldChange < -1), points(log2FoldChange, -log10(pvalue), pch=20, col="blue"))
+
+# Legend
+legend("topright", 
+       legend=c("Upregulated (padj < 0.05, log2FC > 1)", "Downregulated (padj < 0.05, log2FC < -1)"), 
+       col=c("red", "blue"), 
+       pch=20, 
+       bty="y",  
+       cex=0.8,
+       inset=c(-0.15, 0))  
+
+```
+
+
+
+Pie chart with upregulated/downregulated
+
+```{r}
+# Count upregulated genes (log2FC > 1 and padj < 0.05)
+upregulated_genes <- subset(res, padj < 0.05 & log2FoldChange > 1)
+num_upregulated <- nrow(upregulated_genes)
+cat("Number of upregulated genes:", num_upregulated, "\n")
+
+# Count downregulated genes (log2FC < -1 and padj < 0.05)
+downregulated_genes <- subset(res, padj < 0.05 & log2FoldChange < -1)
+num_downregulated <- nrow(downregulated_genes)
+cat("Number of downregulated genes:", num_downregulated, "\n")
+
+# Pie chart
+gene_counts <- c(num_upregulated, num_downregulated)
+labels <- c(paste("Upregulated (", num_upregulated, ")", sep=""), 
+            paste("Downregulated (", num_downregulated, ")", sep=""))
+
+pie(gene_counts, labels = labels, col = c("red", "blue"), 
+    main = "Distribution of Differentially Expressed Genes",
+    border = "white")
+
+legend("bottomleft", legend = labels, fill = c("red", "blue"), inset = c(0.8, 0.8))
+
+```
+
+
+
+Heatmap of DEGs
+
+```{r}
+library(pheatmap)
+normalized_counts <- counts(dds, normalized = TRUE)
+
+# Get names of significant genes (padj < 0.05), and keep NA values
+sig_genes <- rownames(res[!is.na(res$padj) & res$padj < 0.05, ])
+
+# Subset normalized counts for significant genes
+heatmap_data <- normalized_counts[sig_genes, , drop = FALSE]  # Subset normalized counts
+
+# Heatmap
+pheatmap(heatmap_data, 
+         main = "Heatmap of Differentially Expressed Genes",
+         cluster_rows = TRUE,  # Cluster genes
+         cluster_cols = TRUE,  # Cluster samples
+         show_rownames = FALSE,  # Do not show gene names, too many (not readable)
+         show_colnames = TRUE,  # Sample names
+         fontsize_row = 6,      
+         fontsize_col = 8,      
+         color = colorRampPalette(c("blue", "white", "red"))(50)) 
+```
+
+
+
+Venn diagram
+
+```{r}
+library(VennDiagram)
+
+# Filter by padj < 0.05 and abs(log2FoldChange) > 1
+
+# DE genes for CHX vs Control
+res_CHX <- results(dds, contrast = c("Treatment", "CHX", "Control"))
+DE_CHX <- as.data.frame(res_CHX)
+
+# DE genes for OCT vs Control
+res_OCT <- results(dds, contrast = c("Treatment", "OCT", "Control"))
+DE_OCT <- as.data.frame(res_OCT)
+
+# DE genes for CHX vs OCT
+res_CHX_OCT <- results(dds, contrast = c("Treatment", "CHX", "OCT"))
+DE_CHX_OCT <- as.data.frame(res_CHX_OCT)
+
+```
+
+```{r}
+
+# Venn diagram for Upregulated Genes
+# Upregulated genes (log2FoldChange > 1)
+upregulated_CHX <- rownames(subset(DE_CHX, padj < 0.05 & log2FoldChange > 1))
+upregulated_OCT <- rownames(subset(DE_OCT, padj < 0.05 & log2FoldChange > 1))
+upregulated_CHX_OCT <- rownames(subset(DE_CHX_OCT, padj < 0.05 & log2FoldChange > 1))
+
+venn.plot_up <- venn.diagram(
+  x = list(CHX_vs_Control = upregulated_CHX, OCT_vs_Control = upregulated_OCT, CHX_vs_OCT = upregulated_CHX_OCT),
+  category.names = c("CHX vs Control", "OCT vs Control", "CHX vs OCT"),
+  filename = NULL,  
+  output = TRUE,
+  col = "black",
+  fill = c("salmon", "green2", "skyblue"),
+  alpha = 0.6,
+  label.col = "white",
+  main = "Upregulated Genes"
+)
+
+# Display the Venn diagram for Upregulated Genes
+grid.draw(venn.plot_up)
+
+```
+
+
+```{r}
+# Venn diagram for Downregulated Genes
+# Downregulated genes (log2FoldChange < -1)
+downregulated_CHX <- rownames(subset(DE_CHX, padj < 0.05 & log2FoldChange < -1))
+downregulated_OCT <- rownames(subset(DE_OCT, padj < 0.05 & log2FoldChange < -1))
+downregulated_CHX_OCT <- rownames(subset(DE_CHX_OCT, padj < 0.05 & log2FoldChange < -1))
+
+venn.plot_down <- venn.diagram(
+  x = list(CHX_vs_Control = downregulated_CHX, OCT_vs_Control = downregulated_OCT, CHX_vs_OCT = downregulated_CHX_OCT),
+  category.names = c("CHX vs Control", "OCT vs Control", "CHX vs OCT"),
+  filename = NULL,  
+  output = TRUE,
+  col = "black",
+  fill = c("salmon", "green2", "skyblue"),
+  alpha = 0.6,
+  label.col = "white",
+  cex = 1.5,
+  main = "Downregulated Genes"
+)
+
+# Display the Venn diagram for Downregulated Genes
+grid.draw(venn.plot_down)
+
+```
+
+
+List of the shared genes (Control, CHX, OCT) from the Venn diagrams
+
+```{r}
+#Upregulated
+shared_genes_upregulated <- Reduce(intersect, list(upregulated_CHX, upregulated_OCT, upregulated_CHX_OCT))
+
+cat("Shared upregulated genes (", length(shared_genes_upregulated), "):\n", sep="")
+print(shared_genes_upregulated)
+
+
+#Downregulated
+shared_genes_downregulated <- Reduce(intersect, list(downregulated_CHX, downregulated_OCT, downregulated_CHX_OCT))
+
+cat("Shared downregulated genes (", length(shared_genes_downregulated), "):\n", sep="")
+print(shared_genes_downregulated)
+
+
+shared_genes_table <- data.frame(
+  GeneID = c(shared_genes_upregulated, shared_genes_downregulated),
+  Regulation = c(rep("Upregulated", length(shared_genes_upregulated)), 
+                 rep("Downregulated", length(shared_genes_downregulated)))
+)
+
+```
+
+
+Venn intersection (Control, CHX, OCT) - Pathway analysis (UniProt)
+
+```{r}
+Venn_genes <- read.csv("C:/Users/maria/OneDrive/Desktop/Venn_genes_Intersection.csv", row.names=1)
+View(Venn_genes)
+
+
+ggplot(Venn_genes, aes(x = Pathway, y = Gene_name, color = Expression)) +
+  geom_point(size = 4) +  # Size of the dots
+  labs(title = "", x = "Pathway (UniProt)", y = "Gene Name") +
+  theme_minimal() +
+  scale_color_manual(values = c("Upregulated" = "red", "Downregulated" = "blue")) +  # Customize colors
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 12)) 
+
+```
+
+

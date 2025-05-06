@@ -16,7 +16,7 @@ Email: msolsonag@uoc.edu
 5. Alignment and mapping reads to reference genome (HISAT2, SAMtools)
    - Reference genome (SRR27943849.fasta and indexed SRR27943849.fasta.fai)
    - Trimmed reads
-6. Read summarisation or counting the mapped reads (FeatureCounts)
+6. Read summarisation or counting mapped reads (FeatureCounts)
    - Reference genome (SRR27943849.fasta) and GTF file from reference (SA_678_BaktaCLEAN.gtf)
    - Counts list table for each indiviudal sample
 

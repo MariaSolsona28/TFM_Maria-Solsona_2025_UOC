@@ -28,7 +28,7 @@ Email: msolsonag@uoc.edu
 8. Import Metadata
 9. Quality control before normalization
 10. DESeq2 analysis (Normalization and identification of DEGs)
-11. Studying DEGs (PCA plot, Volcano plot, Heatmap)
+11. Studying DEGs (PCA plot, MA plot, Volcano plot, Heatmap)
 12. Venn diagram and Pathway analysis (UniProt)
 
 

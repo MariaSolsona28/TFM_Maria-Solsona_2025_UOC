@@ -168,7 +168,7 @@ samtools flagstat sorted_aligned_reads.bam
 
 ## 6. FeatureCounts
 
-Use`featureCounts`, running the following commands:
+Use`featureCounts` for read summarization running the following commands:
 
 ```bash
 module load subread

@@ -33,7 +33,9 @@ Email: msolsonag@uoc.edu
 
 
 
-# **Code**
+# **Script**
+
+## Part I. Bash
 
 ## 1. Data processing
 
@@ -191,3 +193,7 @@ featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM21.txt -p -t gene sorted_
 ```
 
 Output files are tab-delimited text files for each sorted_aligned reads_samples. A merged file (Output_All), which consolidates the information from all the samples in one table, is created and imported to RStudio for further analysis (Part II) 
+
+
+## Part II. RStudio
+Code and results from RStudio are saved in RMarkdown and HTML format in this GitHub. 

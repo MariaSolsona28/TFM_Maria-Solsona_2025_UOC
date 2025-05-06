@@ -33,7 +33,7 @@ Email: msolsonag@uoc.edu
 
 
 
-# **Script**
+# **Scripts**
 
 ## Part I. Bash
 
@@ -196,4 +196,4 @@ Output files are tab-delimited text files for each sorted_aligned reads_samples.
 
 
 ## Part II. RStudio
-Code and results from RStudio are saved in RMarkdown and HTML format in this GitHub. 
+Code and results from RStudio are saved in RMarkdown and HTML formats in this GitHub.

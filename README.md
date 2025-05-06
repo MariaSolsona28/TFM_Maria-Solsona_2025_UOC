@@ -16,15 +16,15 @@ Email: msolsonag@uoc.edu
 5. Alignment and mapping reads to reference genome (HISAT2, SAMtools)
    - Reference genome (SRR27943849.fasta and indexed SRR27943849.fasta.fai)
    - Trimmed reads
-6. FeatureCounts
+6. Read summarisation or counting the mapped reads (FeatureCounts)
    - Reference genome (SRR27943849.fasta) and GTF file from reference (SA_678_BaktaCLEAN.gtf)
-   - Counts list for each indiviudal sample
+   - Counts list table for each indiviudal sample
 
 
 
 **Part II: Run in RStudio:**
 
-7. Counts list (Merge all the samples in one file to import in RStudio)
+7. Counts list table (Merge all the samples in one file to import in RStudio)
 8. Import Metadata
 9. Quality control before normalization
 10. DESeq2 analysis (Normalization and identification of DEGs)
@@ -190,4 +190,4 @@ featureCounts -a SA_678BaktaCLEAN.gtf -o output_file_MM21.txt -p -t gene sorted_
 
 ```
 
-Output files are tab-delimited text files for each sorted_aligned reads_samples. A merged file (Output_All), which consolidates the information from all the samples, is created and imported to RStudio for further analysis (Part II) 
+Output files are tab-delimited text files for each sorted_aligned reads_samples. A merged file (Output_All), which consolidates the information from all the samples in one table, is created and imported to RStudio for further analysis (Part II) 

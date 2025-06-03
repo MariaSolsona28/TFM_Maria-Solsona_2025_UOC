@@ -29,7 +29,8 @@ Author: Maria Solsona Gaya / Email: msolsonag@uoc.edu
 9. Quality control before normalization
 10. DESeq2 analysis (Normalization and identification of DEGs)
 11. Studying DEGs (e.g. PCA plot, MA plot, Dispersion plot, Volcano plot, Heatmaps)
-12. Venn diagram and Pathway analysis (UniProt)
+12. Comparison between conditions (e.g. Venn diagram, UpSet Plot)
+13. Exloring pathways of selected DEGs genes shared in all conditions (UniProt Pathway analysis) 
 
 
 

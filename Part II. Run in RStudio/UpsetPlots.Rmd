@@ -1,0 +1,83 @@
+
+#UpSet Plots
+
+For a better visualization option than Venn Diagrams.
+
+```{r}
+#UpSet Plots 
+library(UpSetR)
+library(DESeq2)
+```
+
+```{r}
+
+# UpSet Plot - Downregulated genes
+res_CHX_control <- results(dds, contrast = c("Treatment", "CHX", "Control"))
+res_OCT_control <- results(dds, contrast = c("Treatment", "OCT", "Control"))
+res_CHX_OCT <- results(dds, contrast = c("Treatment", "CHX", "OCT"))
+
+# Downregulated genes (log2FoldChange < -1 and padj < 0.05)
+downregulated_CHX <- rownames(subset(res_CHX_control, padj < 0.05 & log2FoldChange < -1))
+downregulated_OCT <- rownames(subset(res_OCT_control, padj < 0.05 & log2FoldChange < -1))
+downregulated_CHX_OCT <- rownames(subset(res_CHX_OCT, padj < 0.05 & log2FoldChange < -1))
+
+# Unique list of all downregulated genes
+all_genes <- unique(c(downregulated_CHX, downregulated_OCT, downregulated_CHX_OCT))
+
+# Presence/absence matrix for all downregulated genes
+presence_matrix <- data.frame(Genes = all_genes)
+
+# Presence/absence for each condition
+presence_matrix$CHX_vs_Control <- ifelse(all_genes %in% downregulated_CHX, 1, 0)
+presence_matrix$OCT_vs_Control <- ifelse(all_genes %in% downregulated_OCT, 1, 0)
+presence_matrix$CHX_vs_OCT <- ifelse(all_genes %in% downregulated_CHX_OCT, 1, 0)
+
+# UpSet plot
+summary_matrix <- presence_matrix[, -1]  
+
+upset(as.data.frame(summary_matrix),
+      sets = names(summary_matrix),
+      keep.order = TRUE,
+      order.by = "freq",                     
+      main.bar.color = "steelblue",         
+      sets.bar.color = "darkblue",          
+      text.scale = 1.5)                      
+```
+
+```{r}
+
+# UpSet plot - Upregulated genes
+
+res_CHX_control <- results(dds, contrast = c("Treatment", "CHX", "Control"))
+res_OCT_control <- results(dds, contrast = c("Treatment", "OCT", "Control"))
+res_CHX_OCT <- results(dds, contrast = c("Treatment", "CHX", "OCT"))
+
+# Upregulated genes (log2FoldChange > 1 and padj < 0.05)
+upregulated_CHX <- rownames(subset(res_CHX_control, padj < 0.05 & log2FoldChange > 1))
+upregulated_OCT <- rownames(subset(res_OCT_control, padj < 0.05 & log2FoldChange > 1))
+upregulated_CHX_OCT <- rownames(subset(res_CHX_OCT, padj < 0.05 & log2FoldChange > 1))
+
+# Unique list of all upregulated genes
+all_upregulated_genes <- unique(c(upregulated_CHX, upregulated_OCT, upregulated_CHX_OCT))
+
+# Presence/absence matrix for all upregulated genes
+presence_matrix <- data.frame(Genes = all_upregulated_genes)
+
+# Presence/absence for each condition
+presence_matrix$CHX_vs_Control <- ifelse(all_upregulated_genes %in% upregulated_CHX, 1, 0)
+presence_matrix$OCT_vs_Control <- ifelse(all_upregulated_genes %in% upregulated_OCT, 1, 0)
+presence_matrix$CHX_vs_OCT <- ifelse(all_upregulated_genes %in% upregulated_CHX_OCT, 1, 0)
+
+
+# UpSet plot
+summary_matrix <- presence_matrix[, -1]  
+
+upset(as.data.frame(summary_matrix),
+      sets = names(summary_matrix),
+      keep.order = TRUE,
+      order.by = "freq",                     
+      main.bar.color = "red4",        
+      sets.bar.color = "red2",         
+      text.scale = 1.5)                      
+
+```
